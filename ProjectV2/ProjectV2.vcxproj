@@ -33,6 +33,7 @@
     <ClInclude Include="Notificacion.h" />
     <ClInclude Include="OfertaEmpleo.h" />
     <ClInclude Include="Pila.h" />
+    <ClInclude Include="Post.h" />
     <ClInclude Include="Postulacion.h" />
     <ClInclude Include="TablaHash.h" />
     <ClInclude Include="Usuario.h" />

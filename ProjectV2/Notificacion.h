@@ -2,15 +2,17 @@
 #include<iostream>
 #include<string>
 #include<sstream>
+#include "Usuario.h"
 using namespace std;
 
 class Notificacion {
 public:
-	string id, usuarioDestino, mensaje, fecha, tipo;
+	Usuario* usuarioDestino;
+	string id, mensaje, fecha, tipo;
 	bool leida;
 	//tipo: general, empleo, menaje, conexion
 
-	Notificacion(string uid = "", string msg = "", string tip = "general", string f = "") {
+	Notificacion(Usuario* uid = nullptr, string msg = "", string tip = "general", string f = "") {
 		this->usuarioDestino = uid;
 		this->mensaje = msg;
 		this->tipo = tip;
@@ -26,6 +28,7 @@ public:
 
 	}
 
+	/*
 	static Notificacion fromFileString(const string& linea) {
 		stringstream ss(linea);
 		string id, usuarioDestino, mensaje, fecha, leidaStr, tipo;
@@ -42,7 +45,7 @@ public:
 		notif.leida = (leidaStr == "true");
 
 		return notif;
-	}
+	}*/
 
 	void marcarComoLeida() { leida = true; }
 

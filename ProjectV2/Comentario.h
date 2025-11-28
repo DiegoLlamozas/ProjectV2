@@ -2,12 +2,16 @@
 #include<iostream>
 #include<string>
 #include<sstream>
+#include "Usuario.h"
+#include "Post.h"
 
 using namespace std;
 
 class Comentario {
 public:
-	string id, autorId, contenido, fecha, postId, tipoAutor;
+	string id, contenido, fecha;
+	Post* post;
+	Usuario* autor;
 	int likes;
 	//AutorID: ID del ususario o empresa que comenta
 	//PostId: ID del post donde se comenta
@@ -21,18 +25,17 @@ public:
 	string usuariosLike[50];
 	int numUsuariosLike;
 
-	Comentario(string aid = "", string cont = "", string pid = "", string tip = "Usuario") {
-		this->autorId = aid;
+	Comentario(Usuario* aut = nullptr, string cont = "", Post* p = nullptr) {
+		this->autor = aut;
 		this->contenido = cont;
-		this->postId = pid;
-		this->tipoAutor = tip;
+		this->post = p;
 		this->likes = 0;
 		this->numRespuestas = 0;
 		this->numUsuariosLike = 0;
 	}
 
 	void darLike(string usuarioId) {
-		for (int  i = 0; i < numUsuariosLike; i++){
+		for (int i = 0; i < numUsuariosLike; i++) {
 			if (usuariosLike[i] == usuarioId) {
 				return;
 			}
@@ -52,7 +55,7 @@ public:
 					usuariosLike[j] = usuariosLike[j + 1];
 				}
 				numUsuariosLike--;
-				likes--; 
+				likes--;
 				return;
 			}
 		}
@@ -107,8 +110,8 @@ public:
 
 	string toFileString() const {
 		stringstream ss;
-		ss << id << "|" << autorId << "|" << contenido << "|"
-			<< fecha << "|" << likes << "|" << postId << "|" << tipoAutor << "|";
+		ss << id << "|" << autor->getId() << "|" << contenido << "|"
+			<< fecha << "|" << likes << "|" << post->getIdPost() << "|" << "|";
 
 		for (int i = 0; i < numUsuariosLike; i++) {
 			ss << usuariosLike[i];
@@ -123,7 +126,7 @@ public:
 		return ss.str();
 	}
 
-	static Comentario fromFileString(const string& linea) {
+	/** static Comentario fromFileString(const string& linea) {
 		stringstream ss(linea);
 		string id, autorId, contenido, fecha, likesStr, postId, tipoAutor, usuariosLikeStr, respuestasIdsStr;
 
@@ -161,11 +164,10 @@ public:
 			}
 		}
 		return comentario;
-	}
+	} **/
 
 	void mostrar() const {
-		cout << autorId;
-		if (tipoAutor == "empresa") { cout << " [Empresa]"; }
+		cout << autor->getId();
 		cout << " ( " << fecha << "):" << endl;
 		cout << contenido << endl;
 		cout << "Likes: " << likes;

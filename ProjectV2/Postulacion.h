@@ -2,30 +2,36 @@
 #include<iostream>
 #include<string>
 #include<sstream>
+#include "Usuario.h"
+#include "OfertaEmpleo.h"
 
 using namespace std;
 
 class Postulacion {
 public:
-	string id, usuarioId, ofertaId, fechaPostulacion, estado, mensajePersonalizado, cvAdjunto;
+	Usuario* usuario;
+	OfertaEmpleo* oferta;
+	string id, fechaPostulacion, estado, mensajePersonalizado, cvAdjunto;
 	//Estado: "Enviada", "Vista", "Entrevista", "Rechazada", "Aceptada"
 	//vcAdjunto: Ruta al archivo CV o ID del curriculum
 
-	Postulacion(string uid = "", string oid = "") {
-		this->usuarioId = uid;
-		this->ofertaId = oid;
+	Postulacion(string id = " " ,Usuario * uid = nullptr, OfertaEmpleo* oid = nullptr) {
+		this->id = id;
+		this->usuario = uid;
+		this->oferta = oid;
 		this->estado = "Enviado";
 		this->fechaPostulacion = "";
 	}
 
 	string toFileString() const {
 		stringstream ss;
-		ss << id << "|" << usuarioId << "|" << ofertaId << "|"
+		ss << id << "|" << usuario->getId() << "|" << oferta->getId() << "|"
 			<< fechaPostulacion << "|" << estado << "|"
 			<< mensajePersonalizado << "|" << cvAdjunto;
 		return ss.str();
 	}
 
+	/*
 	static Postulacion fromFileString(const string& linea) {
 		stringstream ss(linea);
 		string id, usuarioId, oferta, fechaPostulacion, estado, mensajePersonalizado, cvAdjunto;
@@ -46,7 +52,7 @@ public:
 		post.cvAdjunto = cvAdjunto;
 
 		return post;
-	}
+	}*/
 
 	bool estaActiva() const { return estado == "Enviada" || estado == "Vista" || estado == "Enrevista"; }
 
@@ -59,11 +65,11 @@ public:
 	void rechazar() { estado = "Rechazada"; }
 
 	bool operator==(const Postulacion& otra) const {
-		return usuarioId == otra.usuarioId && ofertaId == otra.ofertaId;
+		return usuario->getId() == otra.usuario->getId() && oferta->getId() == otra.oferta->getId();
 	}
 
 	friend ostream& operator<<(ostream& os, const Postulacion& post) {
-		os << "Postulacion de " << post.usuarioId << " a " << post.ofertaId;
+		os << "Postulacion de " << post.usuario->getId() << " a " << post.oferta->getId();
 		os << "\n Estado: " << post.fechaPostulacion;
 		os << " | Fecha: " << post.fechaPostulacion;
 		if (!post.mensajePersonalizado.empty()) {
