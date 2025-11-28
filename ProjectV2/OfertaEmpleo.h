@@ -2,20 +2,25 @@
 #include<iostream>
 #include<string>
 #include<sstream>
+#include "OfertaEmpleo.h"
+#include "Empresa.h"
 #include "Notificacion.h"
 
 using namespace std;
 
 class OfertaEmpleo : public Notificacion {
 public:
-	string empresaId, ubicacion, requisitos, tipoContrato, Categoria;
+	OfertaEmpleo* oferta;
+	Empresa* empresa;
+	string ubicacion, requisitos, tipoContrato, Categoria;
 	double salario;
 	//Tipo contrato: "Tiempo completo", "Medio Tiempo", "Practicas"
 	// Categoria: "Tegnologia", "Diseño", "Ventas", etc.
 
-	OfertaEmpleo(string empId = "", string titulo = "", double sal = 0.0, string ubi = "", string cat = "Tegnologia") {
-		Notificacion("", titulo, "empleo");
-		this->empresaId = empId;
+	OfertaEmpleo(OfertaEmpleo* ofertaId = nullptr, Empresa* empId = nullptr, string titulo = "", double sal = 0.0, string ubi = "", string cat = "Tegnologia") {
+		Notificacion(nullptr, titulo, "empleo");
+		this->oferta = ofertaId;
+		this->empresa = empId;
 		this->salario = sal;
 		this->ubicacion = ubi;
 		this->Categoria = cat;
@@ -26,11 +31,12 @@ public:
 		stringstream ss;
 		ss << id << "|" << usuarioDestino << "|" << mensaje << "|"
 			<< fecha << "|" << (leida ? "true" : "false") << "|" << tipo << "|"
-			<< empresaId << "|" << salario << "|" << ubicacion << "|"
+			<< empresa->getId() << "|" << salario << "|" << ubicacion << "|"
 			<< requisitos << "|" << tipoContrato << "|" << Categoria;
 		return ss.str();
 	}
 
+	/*
 	static OfertaEmpleo fromFileString(const string& linea) {
 		stringstream ss(linea);
 		string id, usuarioDestino, mensaje, fecha, leidaStr, tipo;
@@ -58,10 +64,10 @@ public:
 		oferta.tipoContrato = tipoContrato;
 
 		return oferta;
-	}
+	}*/
 
 	void mostrar() const override {
-		cout << "Oferta Empleo - " << empresaId << endl;
+		cout << "Oferta Empleo - " << empresa->getId() << endl;
 		cout << "  " << mensaje << endl;
 		cout << "  Salario: $" << salario;
 		cout << " | " << ubicacion;
@@ -82,4 +88,6 @@ public:
 		oferta.mostrar();
 		return os;
 	}
+
+	string getId() { return id; }
 };

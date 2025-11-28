@@ -2,13 +2,14 @@
 #include<iostream>
 #include<string>
 #include<sstream>
+#include "Usuario.h"
 
 using namespace std;
 
 class Empresa {
 public: 
 	string id, nombre, industria, tamano, ubicacion, descripcion;
-	string empleados[50];
+	Usuario* empleados[50];
 	int numEmpleados;
 
 	Empresa(string i = "0", string n = "", string ind = "", string t = "Mediana") {
@@ -19,19 +20,21 @@ public:
 		this->numEmpleados = 0;
 	}
 
-	void contratarEmpleado(const string& usuarioID) {
-		if (numEmpleados < 50) {
-			empleados[numEmpleados] = usuarioID;
+	void contratarEmpleado(Usuario* usuario) {
+		if (numEmpleados < 50 && usuario != nullptr) {
+			empleados[numEmpleados] = usuario;
 			numEmpleados++;
 		}
 	}
 
 	bool despedirEmpleado(const string& usuarioID) {
 		for (int i = 0; i < numEmpleados; i++) {
-			if (empleados[i] == usuarioID) {
-				for (int j = i; j < numEmpleados - 1; j++){
+			if (empleados[i] != nullptr && empleados[i]->id == usuarioID) {
+				// Shift elements to remove the employee
+				for (int j = i; j < numEmpleados - 1; j++) {
 					empleados[j] = empleados[j + 1];
 				}
+				empleados[numEmpleados - 1] = nullptr;
 				numEmpleados--;
 				return true;
 			}
@@ -41,10 +44,13 @@ public:
 
 	bool tieneEmpleado(const string& usuarioID) const {
 		for (int i = 0; i < numEmpleados; i++) {
-			if (empleados[i] == usuarioID) { return true; }
+			if (empleados[i] != nullptr && empleados[i]->id == usuarioID) {
+				return true;
+			}
 		}
 		return false;
 	}
+
 
 	int cantidadEmpleados() const { return numEmpleados; }
 
@@ -68,6 +74,7 @@ public:
 		return ss.str();
 	}
 
+	/*
 	static Empresa fromFileString(const string& linea) {
 		stringstream ss(linea);
 		string id, nombre, industria, tamano, ubicacion, descripcion, empleadosStr;
@@ -90,7 +97,7 @@ public:
 			if (!empleadoID.empty()) { emp.contratarEmpleado(empleadoID); }
 		}
 		return emp;
-	}
+	}*/
 
 	bool operator==(const Empresa& otra) const { return id == otra.id; }
 	bool operator<(const Empresa& otra) const { return nombre < otra.nombre; }
@@ -105,5 +112,7 @@ public:
 		}
 		return os;
 	}
+
+	string getId() { return id; }
 
 };

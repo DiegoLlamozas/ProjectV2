@@ -104,10 +104,31 @@ public:
     virtual string getClave() const { return email; }
 
     friend ostream& operator<<(ostream& os, const Usuario& u) {
-        os  << u.nombre << "|" << u.email << "|" << u.profesion;
+        os << u.nombre << "|" << u.email << "|" << u.profesion;
         if (u.numHabilidades > 0) {
             os << "\n  Habilidades: " << u.obtenerHabilidadesString();
         }
         return os;
+    }
+
+    string getId() { return id; }
+
+    string toString() const {
+        stringstream ss;
+        ss << "=== INFORMACIÓN COMPLETA DEL USUARIO ===" << endl;
+        ss << "ID: " << id << endl;
+        ss << "Nombre: " << nombre << endl;
+        ss << "Email: " << email << endl;
+        ss << "Profesión: " << profesion << endl;
+        ss << "Número de habilidades: " << numHabilidades << endl;
+
+        if (numHabilidades > 0) {
+            ss << "Habilidades: " << obtenerHabilidadesString();
+        }
+        else {
+            ss << "Habilidades: Ninguna";
+        }
+
+        return ss.str();
     }
 };
